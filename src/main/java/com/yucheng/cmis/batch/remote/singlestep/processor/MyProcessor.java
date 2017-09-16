@@ -10,7 +10,7 @@ public class MyProcessor implements ItemProcessor<TCredit, TDestcredit> {
 
 	public TDestcredit process(TCredit obj) throws Exception {
 		
-		Thread.sleep(2000);
+		Thread.sleep(100);
 		
 		System.out.println("》》》》》》》》业务逻辑处理：主键："+obj.getId());
 		
