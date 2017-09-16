@@ -14,4 +14,4 @@
 ### 远程Step
 - Master入口：JobLaunchChunkMaste.java
 - Slave入口：JobLaunchChunkSlave.java
-- `依赖：`SpringBatch集成MyBatis示例`
+- 依赖：`SpringBatch集成MyBatis示例`
