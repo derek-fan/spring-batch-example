@@ -6,7 +6,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 import com.yucheng.cmis.batch.JobLaunchBase;
 
 
-public class JobLaunchIbatis {
+public class JobLaunchMybatis {
 	
 	/**
 	 * @param args
