@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="TCreditMapper" > 
   <resultMap id="BaseResultMap" type="com.yucheng.cmis.batch.mybatis.pojo.TCredit" >
-    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="ACCOUNTID" property="accountid" jdbcType="VARCHAR" />
     <result column="NAME" property="name" jdbcType="VARCHAR" />
     <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
@@ -20,101 +20,19 @@
     LIMIT #{_skiprows}, #{_pagesize} 
   </select>
   
-  <select id="selectCursor" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectCursor" resultMap="BaseResultMap"  >
     select 
     <include refid="Base_Column_List" />
     from t_credit  ORDER BY id ASC 
   </select>
   
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_credit
-    where ID = #{id,jdbcType=VARCHAR}
+  <select id="selectPagingWhere" resultMap="BaseResultMap"> 
+  	<![CDATA[
+	    select ID, ACCOUNTID, NAME, AMOUNT, DATE, ADDRESS 
+	    from t_credit   
+	    where id>=#{idMin} and id<=#{idMax} 
+	    LIMIT #{_skiprows}, #{_pagesize} 
+   	]]> 
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from t_credit
-    where ID = #{id,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.yucheng.cmis.batch.mybatis.pojo.TCredit" >
-    insert into t_credit (ID, ACCOUNTID, NAME, 
-      AMOUNT, DATE, ADDRESS
-      )
-    values (#{id,jdbcType=VARCHAR}, #{accountid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{amount,jdbcType=DECIMAL}, #{date,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.yucheng.cmis.batch.mybatis.pojo.TCredit" >
-    insert into t_credit
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        ID,
-      </if>
-      <if test="accountid != null" >
-        ACCOUNTID,
-      </if>
-      <if test="name != null" >
-        NAME,
-      </if>
-      <if test="amount != null" >
-        AMOUNT,
-      </if>
-      <if test="date != null" >
-        DATE,
-      </if>
-      <if test="address != null" >
-        ADDRESS,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="accountid != null" >
-        #{accountid,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="amount != null" >
-        #{amount,jdbcType=DECIMAL},
-      </if>
-      <if test="date != null" >
-        #{date,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yucheng.cmis.batch.mybatis.pojo.TCredit" >
-    update t_credit
-    <set >
-      <if test="accountid != null" >
-        ACCOUNTID = #{accountid,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        NAME = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="amount != null" >
-        AMOUNT = #{amount,jdbcType=DECIMAL},
-      </if>
-      <if test="date != null" >
-        DATE = #{date,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null" >
-        ADDRESS = #{address,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.yucheng.cmis.batch.mybatis.pojo.TCredit" >
-    update t_credit
-    set ACCOUNTID = #{accountid,jdbcType=VARCHAR},
-      NAME = #{name,jdbcType=VARCHAR},
-      AMOUNT = #{amount,jdbcType=DECIMAL},
-      DATE = #{date,jdbcType=VARCHAR},
-      ADDRESS = #{address,jdbcType=VARCHAR}
-    where ID = #{id,jdbcType=VARCHAR}
-  </update>
+  
 </mapper>

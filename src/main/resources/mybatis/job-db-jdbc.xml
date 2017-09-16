@@ -32,11 +32,6 @@
 	  <property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	  <property name="queryId" value="TCreditMapper.selectCursor" />
 	</bean>
-	
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-	    <property name="dataSource" ref="dataSource" />
-	    <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml" />
-	</bean>
     
     <!-- 处理数据，空方法 -->
     <bean id="myProcessor" scope="step"
@@ -49,6 +44,12 @@
     	<property name="assertUpdates" value="false"></property>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
   		<property name="statementId" value="com.yucheng.cmis.batch.mybatis.mapper.TDestcreditMapper.insert" />
+	</bean>
+	
+	<!-- 加载mybatis配置文件 -->	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="dataSource" ref="dataSource" />
+	    <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml" />
 	</bean>
     
 </beans>

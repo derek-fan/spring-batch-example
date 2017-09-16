@@ -4,8 +4,14 @@
 /test/resources/db是示例用于初始化数据库的脚本
 
 ### SpringBatch集成MyBatis示例
-入口执行方法：/batch/mybatis/JobLaunchMybatis.java
+入口：/batch/mybatis/JobLaunchMybatis.java
+
+
+### Step分区
+入口：JobLaunchPartitioner.java
+依赖：`SpringBatch集成MyBatis示例`
 
 ### 远程Step
-Master入口执行方法：JobLaunchChunkMaste.java
-Slave入口执行方法：JobLaunchChunkSlave.java
+Master入口：JobLaunchChunkMaste.java
+Slave入口：JobLaunchChunkSlave.java
+`依赖：`SpringBatch集成MyBatis示例``

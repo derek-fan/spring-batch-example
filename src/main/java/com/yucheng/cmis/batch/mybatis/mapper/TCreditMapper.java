@@ -19,4 +19,6 @@ public interface TCreditMapper {
     int updateByPrimaryKey(TCredit record);
     
     List<TCredit> selectPaging();
+    
+    List<TCredit> selectPagingWhere(String idMin,String idMax);
 }
