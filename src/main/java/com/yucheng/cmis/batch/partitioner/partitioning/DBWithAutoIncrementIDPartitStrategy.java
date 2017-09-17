@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * 分区策略:
- * 根据T_CREDIT表主键ID，如果分区为N，则ID按N等份分划分
+ * 根据注入的table表column列来做分区逻辑，使用该策略类约束：colum是自增长的主键
  * 
  * @author yuhq
  *
@@ -66,30 +66,6 @@ public class DBWithAutoIncrementIDPartitStrategy implements Partitioner{
 		logger.log(Priority.INFO, "分区策略："+resultMap);
 		
 		return resultMap;
-	}
-	
-	
-	public static void main(String[] args) {
-		int min = 1;
-		int max = 1000;
-		int count = 1000; 
-		int gridSize = 3;
-		System.out.println(count/gridSize);
-		
-		int a = count/gridSize;
-		
-		int gridmax = 0;
-		for (int i = 0; i < 3; i++) {
-			gridmax = min+a;
-			System.out.println("max="+gridmax);
-			System.out.println(gridmax>max);
-			if(gridmax>max)
-				gridmax = max;
-			System.out.println("min = "+min +", max = "+gridmax);
-			min = gridmax+1;
-			
-		}
-		
 	}
 	
 	public void validateAndInit(){
