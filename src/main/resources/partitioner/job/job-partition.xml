@@ -13,7 +13,7 @@
 
     <import resource="classpath:partitioner/job-context.xml"/>
     
-    <batch:job id="partitionJob" restartable="true">
+    <batch:job id="slavePartitionJob" >
 		<batch:step id="partitionStep">
 			<!-- 定义分区的Step，指定分区策略 -->
 			<batch:partition step="partitionReadWriteDB" partitioner="partitionerStrategy">

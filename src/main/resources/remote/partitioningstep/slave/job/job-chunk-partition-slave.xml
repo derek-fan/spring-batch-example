@@ -1,0 +1,124 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:batch-int="http://www.springframework.org/schema/batch-integration"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/batch-integration http://www.springframework.org/schema/batch-integration/spring-batch-integration.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms-4.0.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	
+	<import resource="classpath:remote/partitioningstep/slave/job-context-slave.xml" />
+
+	<!-- 配置job-repository，job运行状态不保存到数据库 -->
+	<batch:job id="slavePartitionJob" >
+		<!-- 指定一个简单step，用于调起Slave的-->
+		<batch:step id="helloStep" >
+			<tasklet ref="hello"></tasklet>
+		</batch:step>
+	</batch:job>
+	<!-- 很简单，输出helloWorld -->
+	<bean id="hello" class="com.yucheng.cmis.batch.remote.singlestep.tasklet.HelloWordTasklet" />
+	
+	<!-- 定义分区策略 -->
+	<bean id="partitionerStrategy" 
+	    class="com.yucheng.cmis.batch.partitioner.partitioning.DBWithAutoIncrementIDPartitStrategy">
+		<property name="table" value="t_credit"/>
+		<property name="column" value="ID"/>
+        <property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	
+	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
+	
+	<!-- *****************读写操作Step及相关Bean START -->	
+	<!-- 读写操作Step -->
+    <batch:step id="remotePartitionDBStep">
+		<tasklet>
+			<chunk reader="mybatisPagingReader" writer="mybatisWriter"  processor="myProcessor" commit-interval="100"/>
+			<!-- 定义监听器: -->
+			 <listeners>
+                  <listener ref="partitionItemReadListener"></listener>
+             </listeners>
+		</tasklet>
+	</batch:step>
+	
+	<!-- 读数据  START -->
+    <bean id="mybatisPagingReader" class="org.mybatis.spring.batch.MyBatisPagingItemReader" 
+	    p:sqlSessionFactory-ref="sqlSessionFactory"
+	    p:parameterValues-ref="datesParameters"
+	    p:queryId="TCreditMapper.selectPagingWhere"
+	    p:pageSize="100"
+	    scope="step"/>
+	    
+	<!-- 传参 -->
+	<util:map id="datesParameters" key-type="java.lang.String" scope="step">
+	 <!-- _minRecord和_maxRecord参数是在分区策略中定义的-->
+	  <entry key="idMin"  value="#{stepExecutionContext[_minRecord]}"/>
+	  <entry key="idMax"  value="#{stepExecutionContext[_maxRecord]}"/>
+	</util:map>
+	<!-- 读数据  END -->
+	
+    <!-- 处理数据，空方法 -->
+    <bean id="myProcessor" scope="step" class="com.yucheng.cmis.batch.mybatis.processor.MyProcessor">
+    </bean>
+    
+     <!-- 写数据库 -->
+    <bean id="mybatisWriter" class="org.mybatis.spring.batch.MyBatisBatchItemWriter">
+    	<!-- 数据为空时不校验 -->
+    	<property name="assertUpdates" value="false"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.mybatis.mapper.TDestcreditMapper.insert" />
+	</bean>
+	
+	<!-- 加载mybatis配置文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="dataSource" ref="dataSource" />
+	    <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml" />
+	</bean>
+	<!-- *****************读写操作Step及相关Bean END -->	
+	
+	<!-- 分区处理核心操作:指定实际处理的Step:remotePartitionDBStep-->
+	<bean id="partitionHandler" class="org.springframework.batch.integration.partition.MessageChannelPartitionHandler">
+		<!-- 这里定义的step名称实际是不会生效的，实际引用的是master通过MQ传过来的 -->
+		<property name="stepName" value="remotePartitionDBStep" />
+		<property name="messagingOperations">
+			<bean class="org.springframework.integration.core.MessagingTemplate">
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- *****************MQ相关配置 START-->
+	<!-- MQ连接配置 -->
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+	</bean>
+
+	<int:channel id="inbound-requests" />
+	<int-jms:message-driven-channel-adapter destination-name="requestsQueue" channel="inbound-requests" />
+
+	<bean id="stepExecutionRequestHandler" class="org.springframework.batch.integration.partition.StepExecutionRequestHandler">
+		<property name="jobExplorer" ref="jobExplorer" />
+		<property name="stepLocator" ref="stepLocator" />
+	</bean>
+
+	<int:channel id="outbound-staging" />
+	<int-jms:outbound-channel-adapter destination-name="stagingQueue" channel="outbound-staging" />
+
+	<int:service-activator ref="stepExecutionRequestHandler" input-channel="inbound-requests" output-channel="outbound-staging" />
+
+	<bean id="stepLocator" class="org.springframework.batch.integration.partition.BeanFactoryStepLocator" />
+	<!-- *****************MQ相关配置 END-->
+	
+	<!-- 监听 -->
+	<bean id="partitionItemReadListener"
+		class="com.yucheng.cmis.batch.remote.partitioningstep.listeners.PartitionStepExecutionListener">
+	</bean>
+</beans>

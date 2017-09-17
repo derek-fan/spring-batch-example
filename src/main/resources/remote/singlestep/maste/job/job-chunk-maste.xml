@@ -17,8 +17,7 @@
 	<batch:job id="masteChunkJob">
 		<batch:step id="stepRemoteChunk" next="step2">
 			<tasklet>
-				<chunk reader="mybatisPagingReader" writer="itemWriter"
-					commit-interval="5" />
+				<chunk reader="mybatisPagingReader" writer="itemWriter" commit-interval="5" />
 			</tasklet>
 		</batch:step>
 		

@@ -8,10 +8,10 @@
 
 
 ### Step分区
-- 入口：JobLaunchPartitioner.java
+- 入口：/batch/partitioner/JobLaunchPartitioner.java
 - 依赖：`SpringBatch集成MyBatis示例`
 
 ### 远程Step
-- Master入口：JobLaunchChunkMaste.java
-- Slave入口：JobLaunchChunkSlave.java
+- Master入口：/batch/remote/singlestep/JobLaunchChunkMaste.java
+- Slave入口：/batch/remote/singlestep/JobLaunchChunkSlave.java
 - 依赖：`SpringBatch集成MyBatis示例`
