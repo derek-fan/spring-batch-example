@@ -30,7 +30,7 @@ public class MyBatisPagingItemReader<T> extends AbstractPagingItemReader<T> {
 
   private SqlSessionFactory sqlSessionFactory;
 
-  private SqlSessionTemplate sqlSessionTemplate;
+  protected SqlSessionTemplate sqlSessionTemplate;
 
   private Map<String, Object> parameterValues;
 

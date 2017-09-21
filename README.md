@@ -20,3 +20,20 @@
 - Master入口：com.yucheng.cmis.batch.remote.partitioningstep.JobLaunchPartitionMaste
 - Slave入口：com.yucheng.cmis.batch.remote.partitioningstep.JobLaunchPartitionSlave
 - 依赖：`SpringBatch集成MyBatis示例`,`Step分区`的分区策略
+
+### 组合写Step
+一次性写入多张表
+入口：com.yucheng.cmis.batch.complex.writers.JobLaunchComplextWriter
+ 核心配置：
+```xml
+<bean id="complextWriters"
+	class="org.springframework.batch.item.support.CompositeItemWriter">
+	<property name="sqlSessionTemplate" ref="sqlSession"></property>
+	<property name="delegates">
+		<list>
+			<ref bean="tdestcreditWriter" />
+			<ref bean="ttradeRecordWriterAdapter" />
+		</list>
+	</property>
+</bean>
+```

@@ -21,4 +21,5 @@ public interface TCreditMapper {
     List<TCredit> selectPaging();
     
     List<TCredit> selectPagingWhere(String idMin,String idMax);
+
 }
