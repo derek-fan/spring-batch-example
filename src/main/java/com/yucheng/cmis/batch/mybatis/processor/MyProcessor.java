@@ -2,8 +2,9 @@ package com.yucheng.cmis.batch.mybatis.processor;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import com.yucheng.cmis.batch.mybatis.pojo.TCredit;
-import com.yucheng.cmis.batch.mybatis.pojo.TDestcredit;
+import com.yucheng.cmis.batch.common.pojo.TCredit;
+import com.yucheng.cmis.batch.common.pojo.TDestcredit;
+
 
 
 public class MyProcessor implements ItemProcessor<TCredit, TDestcredit> {

@@ -1,6 +1,6 @@
 package com.yucheng.cmis.batch.mybatis.mapper;
 
-import com.yucheng.cmis.batch.mybatis.pojo.TDestcredit;
+import com.yucheng.cmis.batch.common.pojo.TDestcredit;
 
 public interface TDestcreditMapper {
     int deleteByPrimaryKey(String id);

@@ -1,4 +1,4 @@
-package com.yucheng.cmis.batch.mybatis.pojo;
+package com.yucheng.cmis.batch.common.pojo;
 
 import java.math.BigDecimal;
 

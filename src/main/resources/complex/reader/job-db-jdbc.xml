@@ -45,7 +45,7 @@
     	<!-- 数据为空时不校验 -->
     	<property name="assertUpdates" value="false"></property>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-  		<property name="statementId" value="com.yucheng.cmis.batch.mybatis.mapper.TDestcreditMapper.insert" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TDestcredit.insert" />
 	</bean>
 	
 	<!-- 加载mybatis配置文件 -->	

@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
 
+import com.yucheng.cmis.batch.common.pojo.TCredit;
 import com.yucheng.cmis.batch.complex.reader.pojo.ComplextPojo;
-import com.yucheng.cmis.batch.mybatis.pojo.TCredit;
 
 /**
  * 

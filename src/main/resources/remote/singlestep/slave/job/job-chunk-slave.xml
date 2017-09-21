@@ -28,12 +28,12 @@
     	<!-- 数据为空时不校验 -->
     	<property name="assertUpdates" value="false"></property>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-  		<property name="statementId" value="com.yucheng.cmis.batch.mybatis.mapper.TDestcreditMapper.insert" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TDestcredit.insert" />
 	</bean>
 	<!-- 加载mybatis配置 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 	    <property name="dataSource" ref="dataSource" />
-	    <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml" />
+	    <property name="mapperLocations" value="classpath:common/mappers/*.xml" />
 	</bean>	
 	
 <!-- MQ连接相关配置 -->	

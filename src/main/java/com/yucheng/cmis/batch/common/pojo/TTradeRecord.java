@@ -1,4 +1,4 @@
-package com.yucheng.cmis.batch.complex.writers.pojo;
+package com.yucheng.cmis.batch.common.pojo;
 
 public class TTradeRecord {
     private Integer id;

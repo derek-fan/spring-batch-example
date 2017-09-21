@@ -11,7 +11,7 @@
 	">
 
 
-	<import resource="job-context.xml" />
+	<import resource="classpath:complex/writers/job-context.xml" />
 
 	<batch:job id="dbComplexWriterJob">
 		<batch:step id="dbReadStep">
@@ -28,7 +28,7 @@
 		scope="step">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="pageSize" value="5" />
-		<property name="queryId" value="com.yucheng.cmis.batch.complex.writers.pojo.TCredit.selectPaging" />
+		<property name="queryId" value="TCreditMapper.selectPaging" />
 	</bean>
 
 	<!-- 处理数据，将所有writer中需要的数据全部填充-->
@@ -52,7 +52,7 @@
     <bean id="tdestcreditWriter" class="com.yucheng.cmis.batch.complex.writers.writer.MyBatisWithCheckBatchItemWriter">
     	<!-- 数据为空时不校验 -->
     	<property name="assertUpdates" value="false"></property>
-  		<property name="statementId" value="com.yucheng.cmis.batch.complex.writers.pojo.TDestcredit.insert" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TDestcredit.insert" />
   		
   		<property name="sqlSessionTemplate" ref="sqlSession"></property>
 	</bean>
@@ -62,7 +62,7 @@
 		<property name="checkField" value="ttradeRecordList"></property>
 		<property name="paramField" value="ttradeRecordList"></property>
 		<property name="assertUpdates" value="false"></property>
-		<property name="statementId" value="com.yucheng.cmis.batch.complex.writers.pojo.TTradeRecord.insert" />
+		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TTradeRecord.insert" />
 		
 		<property name="sqlSessionTemplate" ref="sqlSession"></property>
 	</bean>
@@ -75,7 +75,7 @@
 	<!-- 加载mybatis配置文件 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="mapperLocations" value="classpath:complex/writers/mapper/*.xml" />
+		<property name="mapperLocations" value="classpath:common/mappers/*.xml" />
 		<!-- 
 		<property name="transactionFactory">
 		    <bean class="org.mybatis.spring.transaction.SpringManagedTransactionFactory" />

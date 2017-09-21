@@ -12,7 +12,7 @@ public class JobLaunchComplextWriter {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		JobLaunchBase.executeJob("complex/writers/job-complex-writer2.xml", "dbComplexWriterJob",
+		JobLaunchBase.executeJob("complex/writers/job/job-complex-writer2.xml", "dbComplexWriterJob",
 				new JobParametersBuilder().addDate("date", new Date()));
 	}
 }

@@ -28,7 +28,7 @@
 		scope="step">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		<property name="pageSize" value="5" />
-		<property name="queryId" value="com.yucheng.cmis.batch.complex.writers.pojo.TCredit.selectPaging" />
+		<property name="queryId" value="com.yucheng.cmis.batch.common.pojo.TCredit.selectPaging" />
 	</bean>
 
 	<!-- 读数据 游标 -->
@@ -58,7 +58,7 @@
     	<!-- 数据为空时不校验 -->
     	<property name="assertUpdates" value="false"></property>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-  		<property name="statementId" value="com.yucheng.cmis.batch.complex.writers.pojo.TDestcredit.insert" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TDestcredit.insert" />
 	</bean>
 	
 	<!-- 写T_TRADE_RECORD表 -->
@@ -77,7 +77,7 @@
     	<!-- 数据为空时不校验 -->
     	<property name="assertUpdates" value="false"></property>
 		<property name="sqlSessionTemplate" ref="sqlSession"></property>
-  		<property name="statementId" value="com.yucheng.cmis.batch.complex.writers.pojo.TTradeRecord.insert" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TTradeRecord.insert" />
 	</bean>
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">

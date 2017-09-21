@@ -2,7 +2,7 @@ package com.yucheng.cmis.batch.mybatis.mapper;
 
 import java.util.List;
 
-import com.yucheng.cmis.batch.mybatis.pojo.TCredit;
+import com.yucheng.cmis.batch.common.pojo.TCredit;
 
 
 public interface TCreditMapper {

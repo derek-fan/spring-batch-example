@@ -3,6 +3,8 @@ package com.yucheng.cmis.batch.complex.writers.pojo;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.yucheng.cmis.batch.common.pojo.TTradeRecord;
+
 public class TDestcredit {
     private String id;
 

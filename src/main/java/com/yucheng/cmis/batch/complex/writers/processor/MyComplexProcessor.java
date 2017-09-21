@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import com.yucheng.cmis.batch.complex.writers.pojo.TCredit;
+import com.yucheng.cmis.batch.common.pojo.TCredit;
+import com.yucheng.cmis.batch.common.pojo.TTradeRecord;
 import com.yucheng.cmis.batch.complex.writers.pojo.TDestcredit;
-import com.yucheng.cmis.batch.complex.writers.pojo.TTradeRecord;
 
 public class MyComplexProcessor implements ItemProcessor<TCredit, TDestcredit>{
 
