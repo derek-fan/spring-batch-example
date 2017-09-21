@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yucheng.cmis.batch.complex.writers.pojo.TCredit" > 
+  <resultMap id="BaseResultMap" type="com.yucheng.cmis.batch.complex.writers.pojo.TCredit" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ACCOUNTID" property="accountid" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+    <result column="DATE" property="date" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ACCOUNTID, NAME, AMOUNT, DATE, ADDRESS
+  </sql>
+  
+  <select id="selectPaging" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from t_credit  ORDER BY id ASC 
+    LIMIT #{_skiprows}, #{_pagesize} 
+  </select>
+  
+  <select id="selectPagingWhereList" resultMap="BaseResultMap" > 
+    select ID, ACCOUNTID, NAME, AMOUNT, DATE, ADDRESS 
+    from t_credit   
+    where id in  
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+	 #{item}  
+	</foreach>  
+  </select>
+  
+  
+  
+</mapper>

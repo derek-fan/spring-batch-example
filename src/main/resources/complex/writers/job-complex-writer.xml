@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	http://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util.xsd
+	">
+
+
+	<import resource="job-context.xml" />
+
+	<batch:job id="dbComplexWriterJob">
+		<batch:step id="dbReadStep">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="mybatisPagingReader" processor="myProcessor"
+					writer="compositetWriters" commit-interval="5"></chunk>
+			</tasklet>
+		</batch:step>
+	</batch:job>
+
+
+	<!-- 读数据 分页 -->
+	<bean id="mybatisPagingReader" class="org.mybatis.spring.batch.MyBatisPagingItemReader"
+		scope="step">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="pageSize" value="5" />
+		<property name="queryId" value="com.yucheng.cmis.batch.complex.writers.pojo.TCredit.selectPaging" />
+	</bean>
+
+	<!-- 读数据 游标 -->
+	<bean id="mybatisCursorReader" class="org.mybatis.spring.batch.MyBatisCursorItemReader">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="queryId" value="TCreditMapper.selectCursor" />
+	</bean>
+
+	<!-- 处理数据，将所有writer中需要的数据全部填充-->
+	<bean id="myProcessor" scope="step"
+		class="com.yucheng.cmis.batch.complex.writers.processor.MyComplexProcessor">
+	</bean>
+
+	<!-- 【复合写】数据库 -->
+	<bean id="compositetWriters"
+		class="org.springframework.batch.item.support.CompositeItemWriter">
+		<property name="delegates">
+			<list>
+				<ref bean="tdestcreditWriter" />
+				<ref bean="ttradeRecordWriterAdapter" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 写t_destcredit -->
+    <bean id="tdestcreditWriter" class="org.mybatis.spring.batch.MyBatisBatchItemWriter">
+    	<!-- 数据为空时不校验 -->
+    	<property name="assertUpdates" value="false"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.complex.writers.pojo.TDestcredit.insert" />
+	</bean>
+	
+	<!-- 写T_TRADE_RECORD表 -->
+	<bean id="ttradeRecordWriterAdapter" class="com.yucheng.cmis.batch.complex.writers.writer.MyBatisComplexItemWriter">
+		<property name="sqlSessionTemplate" ref="sqlSession"></property>
+		<!-- 配置主模型中用于校验的字段，如果校验不通过，则跳过写-->
+		<property name="checkField" value="ttradeRecordList"></property>
+		<!-- 配置主模型中用于当前writer写的数据，一般这个属性和checkField属值相同 -->
+		<property name="paramField" value="ttradeRecordList"></property>
+		<!-- 引用实际做出数据更新的ItemWriter -->
+		<property name="mybatisWriter" ref="ttradeRecordWriter"></property>
+	</bean>
+	
+	<!-- 普通MyBatisItemWriter配置 -->
+    <bean id="ttradeRecordWriter" class="org.mybatis.spring.batch.MyBatisBatchItemWriter">
+    	<!-- 数据为空时不校验 -->
+    	<property name="assertUpdates" value="false"></property>
+		<property name="sqlSessionTemplate" ref="sqlSession"></property>
+  		<property name="statementId" value="com.yucheng.cmis.batch.complex.writers.pojo.TTradeRecord.insert" />
+	</bean>
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	    <constructor-arg index="0" ref="sqlSessionFactory" />
+	    <constructor-arg index="1" value="BATCH" />
+	</bean>
+
+	<!-- 加载mybatis配置文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:complex/writers/mapper/*.xml" />
+	</bean>
+
+</beans>
