@@ -1,2 +1,4 @@
 eclipse.preferences.version=1
+encoding//src/main/java/com/yucheng/cmis/batch/complex/readers/reader/MyBatisPagingMuiltItemReader.java=UTF-8
+encoding//src/main/java/com/yucheng/cmis/batch/complex/readers/reader/Prepare4MyBatisSubItemReader.java=UTF-8
 encoding//src/main/java/com/yucheng/cmis/batch/complex/writers/writer/MyBatisWithCheckBatchItemWriter.java=UTF-8

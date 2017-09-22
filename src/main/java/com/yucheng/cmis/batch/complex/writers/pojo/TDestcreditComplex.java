@@ -3,9 +3,9 @@ package com.yucheng.cmis.batch.complex.writers.pojo;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.yucheng.cmis.batch.common.pojo.TTradeRecord;
+import com.yucheng.cmis.batch.common.pojo.TDestTradeRecord;
 
-public class TDestcredit {
+public class TDestcreditComplex {
     private String id;
 
     private String accountid;
@@ -18,7 +18,7 @@ public class TDestcredit {
 
     private String address;
     
-    private List<TTradeRecord> ttradeRecordList = null;
+    private List<TDestTradeRecord> ttradeRecordList = null;
 
     public String getId() {
         return id;
@@ -68,11 +68,12 @@ public class TDestcredit {
         this.address = address == null ? null : address.trim();
     }
 
-	public List<TTradeRecord> getTtradeRecordList() {
+	public List<TDestTradeRecord> getTtradeRecordList() {
 		return ttradeRecordList;
 	}
 
-	public void setTtradeRecordList(List<TTradeRecord> ttradeRecordList) {
+	public void setTtradeRecordList(List<TDestTradeRecord> ttradeRecordList) {
 		this.ttradeRecordList = ttradeRecordList;
 	}
+	
 }

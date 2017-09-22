@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yucheng.cmis.batch.common.pojo.TTradeRecord" >
-  <resultMap id="BaseResultMap" type="com.yucheng.cmis.batch.common.pojo.TTradeRecord" >
-    <result column="ID" property="id" jdbcType="INTEGER" />
-    <result column="ACCOUNTID" property="accountid" jdbcType="INTEGER" />
-    <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
-    <result column="TRADE_ADDRESS" property="tradeAddress" jdbcType="VARCHAR" />
-  </resultMap>
-  <insert id="insert" parameterType="com.yucheng.cmis.batch.common.pojo.TTradeRecord" >
-    insert into t_trade_record (ID, ACCOUNTID, TRADE_TYPE, 
-      TRADE_ADDRESS)
-    values (#{id,jdbcType=INTEGER}, #{accountid,jdbcType=INTEGER}, #{tradeType,jdbcType=VARCHAR}, 
-      #{tradeAddress,jdbcType=VARCHAR})
-  </insert>
+<mapper namespace="com.yucheng.cmis.batch.common.mapper.TTradeRecordMapper">
+	<resultMap id="BaseResultMap"
+		type="com.yucheng.cmis.batch.common.pojo.TTradeRecord">
+		<result column="ID" property="id" jdbcType="INTEGER" />
+		<result column="ACCOUNTID" property="accountid" jdbcType="INTEGER" />
+		<result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+		<result column="TRADE_ADDRESS" property="tradeAddress"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, ACCOUNTID, TRADE_TYPE, TRADE_ADDRESS
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_trade_record
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectWithSubReader" resultMap="BaseResultMap"  parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from t_trade_record
+		where ID = #{_PARENT_PK,jdbcType=VARCHAR}
+	</select>
+	
+	
+	
 </mapper>

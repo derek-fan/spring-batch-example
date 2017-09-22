@@ -37,3 +37,42 @@
 	</property>
 </bean>
 ```
+
+### 组合读
+一次性读多张表，适用主表+子表+从表
+入口:com.yucheng.cmis.batch.complex.readers.JobLaunchComplextReader
+核心配置:
+```xml
+<!-- 读取数据 -->
+<bean id="complexReaders" class="com.yucheng.cmis.batch.complex.readers.reader.MyBatisPagingMuiltItemReader" scope="step">
+	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	<!-- 主查询ID -->
+	<property name="queryId" value="com.yucheng.cmis.batch.complex.readers.mapper.TCreditComplexMapper.selectPaging" />
+	<!-- 分页大小 -->
+	<property name="pageSize" value="10" />
+	<!-- 子查询需要的额外参数 -->
+	<property name="parameterValues">
+		<map>
+			<entry key="mytestParam" value="#{jobParameters['_myTestParam']}" />
+		</map>
+	</property>
+	<!-- 子查询：读取数据配置，支持多个 -->
+	<property name="subReaders">
+		<list>
+			<ref bean="subReader1" />
+		</list>
+	</property>
+</bean>
+
+<!-- 子查询 -->
+<bean id="subReader1" class="com.yucheng.cmis.batch.complex.readers.reader.MyBatisSubItemReader" scope="prototype">
+	<!-- 子查询ID -->
+	<property name="queryId" value="com.yucheng.cmis.batch.common.mapper.TTradeRecordMapper.selectWithSubReader" />
+	<!-- 主表的主键 -->
+	<property name="fKField" value="id" />
+	<!-- POJO中属性，用于子查询将结果集set到pojo中 -->
+	<property name="pField" value="ttradeRecordList" />
+	<!-- true:主表每次查询的时候都会触发子表查询；false:子表查询只会触发一次 -->
+	<property name="oneByOne" value="true" />
+</bean>
+```

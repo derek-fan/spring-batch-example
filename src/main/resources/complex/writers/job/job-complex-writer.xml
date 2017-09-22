@@ -11,7 +11,7 @@
 	">
 
 
-	<import resource="job-context.xml" />
+	<import resource="classpath:complex/writers/job-context.xml" />
 
 	<batch:job id="dbComplexWriterJob">
 		<batch:step id="dbReadStep">

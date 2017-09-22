@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.batch.item.ItemProcessor;
 
 import com.yucheng.cmis.batch.common.pojo.TCredit;
-import com.yucheng.cmis.batch.common.pojo.TTradeRecord;
-import com.yucheng.cmis.batch.complex.writers.pojo.TDestcredit;
+import com.yucheng.cmis.batch.common.pojo.TDestTradeRecord;
+import com.yucheng.cmis.batch.complex.writers.pojo.TDestcreditComplex;
 
-public class MyComplexProcessor implements ItemProcessor<TCredit, TDestcredit>{
+public class MyComplexProcessor implements ItemProcessor<TCredit, TDestcreditComplex>{
 
-	public TDestcredit process(TCredit item) throws Exception {
-		TDestcredit ret =  new TDestcredit();
+	public TDestcreditComplex process(TCredit item) throws Exception {
+		TDestcreditComplex ret =  new TDestcreditComplex();
 		ret.setId(item.getId());
 		ret.setAccountid(item.getAccountid());
 		ret.setAmount(item.getAmount());
@@ -21,9 +21,9 @@ public class MyComplexProcessor implements ItemProcessor<TCredit, TDestcredit>{
 		ret.setName(item.getName());
 		
 		
-		List<TTradeRecord> list = new ArrayList<TTradeRecord>();
+		List<TDestTradeRecord> list = new ArrayList<TDestTradeRecord>();
 		for (int i = 0; i < 3; i++) {
-			TTradeRecord tradeRecord = new TTradeRecord();
+			TDestTradeRecord tradeRecord = new TDestTradeRecord();
 //			tradeRecord.setId(1000);
 			tradeRecord.setAccountid(Integer.valueOf(item.getId()));
 			tradeRecord.setTradeAddress(item.getAddress());

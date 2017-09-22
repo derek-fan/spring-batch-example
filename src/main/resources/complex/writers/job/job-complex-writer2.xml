@@ -62,7 +62,7 @@
 		<property name="checkField" value="ttradeRecordList"></property>
 		<property name="paramField" value="ttradeRecordList"></property>
 		<property name="assertUpdates" value="false"></property>
-		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TTradeRecord.insert" />
+		<property name="statementId" value="com.yucheng.cmis.batch.common.mapper.TDestTradeRecordMapper.insert" />
 		
 		<property name="sqlSessionTemplate" ref="sqlSession"></property>
 	</bean>

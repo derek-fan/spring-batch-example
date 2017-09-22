@@ -37,3 +37,15 @@ CREATE TABLE t_trade_record(
 ALTER TABLE `t_trade_record`
 MODIFY COLUMN `ID`  int(11) NULL AUTO_INCREMENT FIRST ;
 	
+	
+CREATE TABLE t_dest_trade_record(
+		ID int,
+    ACCOUNTID int,
+    TRADE_TYPE VARCHAR(10),
+    TRADE_ADDRESS VARCHAR(128),
+    primary key (ID)
+)
+	ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	
+ALTER TABLE `t_dest_trade_record`
+MODIFY COLUMN `ID`  int(11) NULL AUTO_INCREMENT FIRST ;	

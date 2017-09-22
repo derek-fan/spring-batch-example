@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	http://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util.xsd
+	">
+
+   
+    <import resource="classpath:complex/readers/job-context.xml" />
+    
+    <batch:job id="job-complex-readers">
+        <batch:step id="dbReadStep">
+            <tasklet transaction-manager="transactionManager">
+                <chunk reader="complexReaders" processor="myProcessor" writer="mybatisWriter" commit-interval="5"></chunk>
+            </tasklet>
+        </batch:step>
+    </batch:job>
+    
+    
+    <!-- 读取数据 -->
+	<bean id="complexReaders" class="com.yucheng.cmis.batch.complex.readers.reader.MyBatisPagingMuiltItemReader" scope="step">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<!-- 主查询ID -->
+		<property name="queryId" value="com.yucheng.cmis.batch.complex.readers.mapper.TCreditComplexMapper.selectPaging" />
+		<!-- 分页大小 -->
+		<property name="pageSize" value="10" />
+		<!-- 子查询需要的额外参数 -->
+		<property name="parameterValues">
+			<map>
+				<entry key="mytestParam" value="#{jobParameters['_myTestParam']}" />
+			</map>
+		</property>
+		<!-- 子查询：读取数据配置，支持多个 -->
+		<property name="subReaders">
+			<list>
+				<ref bean="subReader1" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 子查询 -->
+	<bean id="subReader1" class="com.yucheng.cmis.batch.complex.readers.reader.MyBatisSubItemReader" scope="prototype">
+		<!-- 子查询ID -->
+		<property name="queryId" value="com.yucheng.cmis.batch.common.mapper.TTradeRecordMapper.selectWithSubReader" />
+		<!-- 主表的主键 -->
+		<property name="fKField" value="id" />
+		<!-- POJO中属性，用于子查询将结果集set到pojo中 -->
+		<property name="pField" value="ttradeRecordList" />
+		<!-- true:主表每次查询的时候都会触发子表查询；false:子表查询只会触发一次 -->
+		<property name="oneByOne" value="true" />
+	</bean>
+    
+    
+    <!-- 处理数据，空方法 -->
+    <bean id="myProcessor" scope="step"
+        class="com.yucheng.cmis.batch.complex.readers.processor.MyComplexProcessorForReader">
+    </bean>
+    
+     <!-- 写数据库 -->
+    <bean id="mybatisWriter" class="org.mybatis.spring.batch.MyBatisBatchItemWriter">
+    	<!-- 数据为空时不校验 -->
+    	<property name="assertUpdates" value="false"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TDestcredit.insert" />
+	</bean>
+	
+	<!-- 加载mybatis配置文件 -->	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="dataSource" ref="dataSource" />
+	    <property name="mapperLocations" >
+	    	<list>
+	    		<value>classpath:common/mappers/*.xml</value>
+	    		<value>complex/readers/mappers/*.xml</value>
+	    	</list>
+	    </property>
+	</bean>
+    
+</beans>

@@ -1,4 +1,4 @@
-package com.yucheng.cmis.batch.mybatis.mapper;
+package com.yucheng.cmis.batch.common.mapper;
 
 import java.util.List;
 
