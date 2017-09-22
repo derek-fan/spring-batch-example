@@ -39,9 +39,9 @@
 ```
 
 ### 组合读
-一次性读多张表，适用主表+子表+从表
-入口:com.yucheng.cmis.batch.complex.readers.JobLaunchComplextReader
-核心配置:
+- 一次性读多张表，适用主表+子表+从表
+- 入口:com.yucheng.cmis.batch.complex.readers.JobLaunchComplextReader
+- 核心配置:
 ```xml
 <!-- 读取数据 -->
 <bean id="complexReaders" class="com.yucheng.cmis.batch.complex.readers.reader.MyBatisPagingMuiltItemReader" scope="step">
