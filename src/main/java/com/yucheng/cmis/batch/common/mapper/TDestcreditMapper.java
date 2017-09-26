@@ -8,6 +8,8 @@ public interface TDestcreditMapper {
     int insert(TDestcredit record);
 
     int insertSelective(TDestcredit record);
+    
+    int delete();
 
     TDestcredit selectByPrimaryKey(String id);
 

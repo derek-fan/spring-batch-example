@@ -17,4 +17,8 @@
       #{amount,jdbcType=DECIMAL}, #{date,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
       )
   </insert>
+  
+  <delete id="delete"  >
+    delete from t_destcredit 
+  </delete>
 </mapper>

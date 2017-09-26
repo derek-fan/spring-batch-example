@@ -15,4 +15,8 @@
       #{tradeAddress,jdbcType=VARCHAR})
   </insert>
   
+  <delete id="delete"  >
+    delete from t_dest_trade_record 
+  </delete>
+  
 </mapper>

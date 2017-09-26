@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	http://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util.xsd
+	">
+	
+	<bean id="helloTasklet" class="com.yucheng.cmis.batch.common.tasklet.HelloTasklet" />
+    
+    <!-- 清理表 -->
+    <bean id="cleanDatas" class="com.yucheng.cmis.batch.common.tasklet.CleanTablesDataTasklet">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    	<property name="statementIdList">
+    		<list>
+    			<value>com.yucheng.cmis.batch.common.pojo.TDestcredit.delete</value>
+    			<value>com.yucheng.cmis.batch.common.mapper.TDestTradeRecordMapper.delete</value>
+    		</list>
+    	</property>
+    </bean>
+    
+    
+    <!-- 读数据  分页-->
+    <bean id="mybatisPagingReader" class="org.mybatis.spring.batch.MyBatisPagingItemReader" scope="step" >
+		 <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		 <property name="pageSize" value="5" />
+  		 <property name="queryId" value="TCreditMapper.selectPaging" />
+	</bean>
+	
+    <!-- 处理数据，空方法 -->
+    <bean id="myProcessor" scope="step"
+        class="com.yucheng.cmis.batch.flow.processor.FlowProcessor">
+    </bean>
+    
+     <!-- 写数据库 -->
+    <bean id="mybatisWriter" class="org.mybatis.spring.batch.MyBatisBatchItemWriter">
+    	<!-- 数据为空时不校验 -->
+    	<property name="assertUpdates" value="false"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+  		<property name="statementId" value="com.yucheng.cmis.batch.common.pojo.TDestcredit.insert" />
+	</bean>
+	
+	<!-- 加载mybatis配置文件 -->	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="dataSource" ref="dataSource" />
+	    <property name="mapperLocations" value="classpath:common/mappers/*.xml" />
+	</bean>
+	
+	<bean id="flowListener" class="com.yucheng.cmis.batch.flow.listener.FlowDeciderListener"/>
+    
+</beans>

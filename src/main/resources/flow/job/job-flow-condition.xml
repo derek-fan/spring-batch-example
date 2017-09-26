@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	http://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util.xsd
+	">
+
+	<import resource="classpath:flow/job-context.xml" />
+	<import resource="classpath:flow/base/job-tasklet.xml" />
+
+	<batch:job id="conditionFlowJog">
+		<batch:step id="step1.hello" >
+			<tasklet ref="helloTasklet">
+				<listeners>
+                  <listener ref="flowListener"></listener>
+             	</listeners>
+			</tasklet>
+			
+			<!-- 条件判断：当ExitStatus=T_FAILD时，流向id=other的Step，除此之外流向step2.clean -->
+			<batch:next on="*" to="step2.clean" />
+			<batch:next on="T_FAILD" to="other" />
+		</batch:step>
+
+		<batch:step id="step2.clean" next="step3.copyData">
+			<batch:tasklet transaction-manager="transactionManager"
+				ref="cleanDatas" />
+		</batch:step>
+
+		<batch:step id="step3.copyData">
+			<batch:tasklet transaction-manager="transactionManager">
+				<batch:chunk reader="mybatisPagingReader" processor="myProcessor"
+					writer="mybatisWriter" commit-interval="5" />
+			</batch:tasklet>
+		</batch:step>
+
+		<batch:step id="other" >
+			<batch:tasklet ref="helloTasklet" />
+		</batch:step>
+	</batch:job>
+
+
+</beans>

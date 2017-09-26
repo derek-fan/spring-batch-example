@@ -6,4 +6,6 @@ import com.yucheng.cmis.batch.common.pojo.TDestTradeRecord;
 
 public interface TDestTradeRecordMapper {
 	int insert(TDestTradeRecord record);
+	
+	 int delete();
 }

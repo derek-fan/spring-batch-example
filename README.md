@@ -42,6 +42,7 @@
 - 一次性读多张表，适用主表+子表+从表
 - 入口:com.yucheng.cmis.batch.complex.readers.JobLaunchComplextReader
 - 核心配置:
+
 ```xml
 <!-- 读取数据 -->
 <bean id="complexReaders" class="com.yucheng.cmis.batch.complex.readers.reader.MyBatisPagingMuiltItemReader" scope="step">
@@ -76,3 +77,12 @@
 	<property name="oneByOne" value="true" />
 </bean>
 ```
+
+### Job流程示例
+#### 顺序流程
+- 入口：com.yucheng.cmis.batch.flow.JobLaunchFlowSequential
+
+### 条流流程
+- 入口:com.yucheng.cmis.batch.flow.JobLaunchFlowCondition，根据启动时传入的参数来判断流程走向
+- 核心配置：监听，通过监听的afterStep来判断并设置ExitStatus; next标签根据on做条件匹配，to指向下一步骤
+
