@@ -86,3 +86,6 @@
 - 入口:com.yucheng.cmis.batch.flow.JobLaunchFlowCondition，根据启动时传入的参数来判断流程走向
 - 核心配置：监听，通过监听的afterStep来判断并设置ExitStatus; next标签根据on做条件匹配，to指向下一步骤
 
+### 参数传递示例
+- 入口:com.yucheng.cmis.batch.paramers.JobLaunchParamers
+- 演示了设置Job参数，XML中获取Job参数；Step参数设置及使用
